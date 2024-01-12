@@ -16,18 +16,53 @@ If a satoshi is subsequently packaged up in an output of more than one satoshi, 
 
 ## Setup instructions depricated.
 Please reach out 
-### Environment Variables
+## Environment Variables
 - POSTGRES_FULL=`<postgres connection string>`
 - JUNGLEBUS=https://junglebus.gorillapool.io
 - ARC=https://arc.gorillapool.io
 - REDIS=`<redis host>:<redis port>`
 - TAAL_TOKEN=`<If using TAAL for ARC, provide API Token>`
 
+- copy `.env.example` as `.env`
+- go https://junglebus.gorillapool.io to get a subscription id
+  
+  create a with such config: 
+  ![](./images/screenshot_2024-01-10_at_8.01.33___am.png)
+
+## Start docker
+
+
+```
+docker-compose up
+```
+
+
 ## Run DB migrations
 ```
+
+# 
 cd migrations
 go run .
 ```
+## Run Ord
+```
+cd cmd/ord
+go build
+./ord -t [subscription id] -s 825885
+```
 
 
+## Run BSV20v2
+```
+cd cmd/bsv20v2
+go build
+./bsv20v2 -t [subscription id] -s 825885
+```
 
+
+## Run Http server
+```
+cd cmd/server
+go build
+./server
+```
