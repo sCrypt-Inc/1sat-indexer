@@ -9,8 +9,8 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: bsv
-      POSTGRES_PASSWORD: 111111
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: 1sats
 
   redis:
