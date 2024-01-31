@@ -66,3 +66,7 @@ cd cmd/server
 go build
 ./server
 ```
+
+## Start APIs
+
+https://github.com/sCrypt-Inc/1sat-server-js
