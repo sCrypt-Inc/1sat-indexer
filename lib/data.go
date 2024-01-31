@@ -66,6 +66,7 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 	rawtx, _ = Rdb.HGet(context.Background(), "tx", txid).Bytes()
 
 	if len(rawtx) > 100 {
+		// log.Println("Requesting tx from redis", txid)
 		return rawtx, nil
 	} else {
 		rawtx = []byte{}
@@ -85,6 +86,11 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 		if r, err := bit.GetRawTransactionRest(txid); err == nil {
 			rawtx, _ = io.ReadAll(r)
 		}
+	}
+
+	if len(rawtx) == 0 {
+		log.Println("Requesting tx from WOC", txid)
+		rawtx, err = LoadTxFromWOC(txid, os.Getenv("NETWORK"))
 	}
 
 	if len(rawtx) == 0 {
@@ -149,4 +155,28 @@ func GetChaintip() (*models.BlockHeader, error) {
 	}
 	fmt.Println("Chaintip", chaintip.Height)
 	return chaintip, nil
+}
+
+func LoadTxFromWOC(txid string, network string) (rawtx []byte, err error) {
+
+	if len(network) == 0 {
+		network = "main"
+	}
+
+	url := fmt.Sprintf("https://api.whatsonchain.com/v1/bsv/%s/tx/%s/hex", network, txid)
+	// log.Println("Requesting txo", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		err = fmt.Errorf("missing-txn %s", txid)
+		return
+	}
+
+	rawtx, err = io.ReadAll(resp.Body)
+
+	return
 }
