@@ -2,6 +2,7 @@ package lib
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -145,7 +146,16 @@ func LoadTxFromWOC(txid string, network string) (rawtx []byte, err error) {
 		return
 	}
 
-	rawtx, err = io.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		return
+	}
+
+	rawtx, err = hex.DecodeString(string(b))
+	if err != nil {
+		panic(err)
+	}
 
 	return
 }
