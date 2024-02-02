@@ -62,6 +62,11 @@ func init() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	err = ordinals.Initialize(indexer.Db, indexer.Rdb)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func main() {
