@@ -61,6 +61,11 @@ func init() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	err = ordinals.Initialize(indexer.Db, indexer.Rdb)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func main() {
@@ -89,6 +94,7 @@ func main() {
 			ticks := map[string]uint64{}
 			for _, txo := range ctx.Txos {
 				if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
+					bsv20.Save(txo)
 					ticker := bsv20.Ticker
 					if ticker == "" {
 						if bsv20.Id == nil {
