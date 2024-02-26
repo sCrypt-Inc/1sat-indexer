@@ -9,9 +9,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: 1sats
+      POSTGRES_USER: $DB_USERNAME
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
 
   redis:
     image: redis:latest
