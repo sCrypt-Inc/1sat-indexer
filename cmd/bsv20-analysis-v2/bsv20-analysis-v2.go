@@ -2,16 +2,11 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"log"
-	"net/http"
 	"os"
-	"time"
 
-	"github.com/GorillaPool/go-junglebus/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
@@ -62,66 +57,34 @@ func init() {
 		log.Panic(err)
 	}
 
-	err = ordinals.Initialize(indexer.Db, indexer.Rdb)
-	if err != nil {
-		log.Panic(err)
-	}
 }
 
 func main() {
-	var chaintip *models.BlockHeader
-	chaintip, err := getChaintip()
-	if err != nil {
-		log.Panicln(err)
-	}
-	go func() {
-		timer := time.NewTicker(1 * time.Minute)
-		for {
-			<-timer.C
-			chaintip, err = getChaintip()
-			if err != nil {
-				log.Println("JB Tip", err)
-				continue
-			}
-		}
-	}()
 
-	err = indexer.Exec(
+	err := indexer.Exec(
 		true,
 		false,
 		func(ctx *lib.IndexContext) error {
 			ordinals.ParseInscriptions(ctx)
-			ticks := map[string]uint64{}
+			ids := map[string]uint64{}
 			for _, txo := range ctx.Txos {
 				if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
-					bsv20.Save(txo)
-					ticker := bsv20.Ticker
-					if ticker == "" {
-						if bsv20.Id == nil {
-							continue
-						}
-						ticker = bsv20.Id.String()
+					if bsv20.Id == nil {
+						continue
 					}
-					if txouts, ok := ticks[ticker]; !ok {
-						ticks[ticker] = 1
+					id := bsv20.Id.String()
+					if txouts, ok := ids[id]; !ok {
+						ids[id] = 1
 					} else {
-						ticks[ticker] = txouts + 1
+						ids[id] = txouts + 1
 					}
 				}
 			}
-			for ticker, txouts := range ticks {
-				id, err := lib.NewOutpointFromString(ticker)
+			for idstr, txouts := range ids {
+				id, err := lib.NewOutpointFromString(idstr)
 				if err != nil {
-					_, err = db.Exec(context.Background(), `
-						INSERT INTO bsv20v1_txns(txid, tick, height, idx, txouts)
-						VALUES($1, $2, $3, $4, $5)
-						ON CONFLICT(txid, tick) DO NOTHING`,
-						ctx.Txid,
-						ticker,
-						ctx.Height,
-						ctx.Idx,
-						txouts,
-					)
+					log.Printf("Err: %s %x %d\n", idstr, ctx.Txid, txouts)
+					return err
 				} else {
 					_, err = db.Exec(context.Background(), `
 						INSERT INTO bsv20v2_txns(txid, id, height, idx, txouts)
@@ -135,16 +98,14 @@ func main() {
 					)
 				}
 				if err != nil {
-					log.Printf("Err: %s %x %d\n", ticker, ctx.Txid, txouts)
+					log.Printf("Err: %s %x %d\n", idstr, ctx.Txid, txouts)
 					return err
 				}
 			}
 			return nil
 		},
 		func(height uint32) error {
-			for height > chaintip.Height-6 {
-				time.Sleep(5 * time.Second)
-			}
+
 			return nil
 		},
 		INDEXER,
@@ -158,26 +119,4 @@ func main() {
 	if err != nil {
 		log.Panicln(err)
 	}
-}
-
-func getChaintip() (*models.BlockHeader, error) {
-	url := fmt.Sprintf("%s/v1/block_header/tip", os.Getenv("JUNGLEBUS"))
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Println("JB Tip Request", err)
-		return nil, err
-	}
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("JB Tip Read", err)
-		return nil, err
-	}
-	chaintip := &models.BlockHeader{}
-	err = json.Unmarshal(body, &chaintip)
-	if err != nil {
-		log.Println("JB Tip Unmarshal", err)
-		return nil, err
-	}
-	fmt.Println("Chaintip", chaintip.Height)
-	return chaintip, nil
 }

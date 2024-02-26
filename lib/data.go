@@ -2,6 +2,7 @@ package lib
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -60,6 +61,7 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 	rawtx, _ = Rdb.Get(context.Background(), txid).Bytes()
 
 	if len(rawtx) > 0 {
+		// log.Println("Requesting tx from redis", txid)
 		return rawtx, nil
 	}
 
@@ -76,6 +78,11 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 		if r, err := bit.GetRawTransactionRest(txid); err == nil {
 			rawtx, _ = io.ReadAll(r)
 		}
+	}
+
+	if len(rawtx) == 0 {
+		log.Println("Requesting tx from WOC", txid)
+		rawtx, err = LoadTxFromWOC(txid, os.Getenv("NETWORK"))
 	}
 
 	if len(rawtx) == 0 {
@@ -118,4 +125,37 @@ func GetSpend(outpoint *Outpoint) (spend []byte, err error) {
 		return
 	}
 	return io.ReadAll(resp.Body)
+}
+
+func LoadTxFromWOC(txid string, network string) (rawtx []byte, err error) {
+
+	if len(network) == 0 {
+		network = "main"
+	}
+
+	url := fmt.Sprintf("https://api.whatsonchain.com/v1/bsv/%s/tx/%s/hex", network, txid)
+	// log.Println("Requesting txo", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		err = fmt.Errorf("missing-txn %s", txid)
+		return
+	}
+
+	b, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		return
+	}
+
+	rawtx, err = hex.DecodeString(string(b))
+	if err != nil {
+		panic(err)
+	}
+
+	return
 }

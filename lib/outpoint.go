@@ -56,6 +56,10 @@ func (o *Outpoint) Txid() []byte {
 	return (*o)[:32]
 }
 
+func (o *Outpoint) TxidStr() string {
+	return hex.EncodeToString((*o).Txid())
+}
+
 func (o *Outpoint) Vout() uint32 {
 	return binary.BigEndian.Uint32((*o)[32:])
 }
