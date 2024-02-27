@@ -46,11 +46,12 @@ func init() {
 		log.Panic(err)
 	}
 
-	rdb = redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS"),
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
+	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		panic(err)
+	}
+
+	rdb := redis.NewClient(opts)
 
 	err = lib.Initialize(db, rdb)
 	if err != nil {
@@ -92,11 +93,12 @@ func main() {
 
 	fmt.Println("Starting Mempool")
 	// go processQueue()
-	sub := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS"),
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
+	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		panic(err)
+	}
+
+	sub := redis.NewClient(opts)
 	ch := sub.Subscribe(context.Background(), "submit", "broadcast").Channel()
 
 	go func() {
