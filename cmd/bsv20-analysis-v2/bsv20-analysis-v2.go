@@ -46,11 +46,12 @@ func init() {
 		log.Panic(err)
 	}
 
-	rdb = redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS"),
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
+	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		panic(err)
+	}
+
+	rdb = redis.NewClient(opts)
 
 	err = indexer.Initialize(db, rdb)
 	if err != nil {
