@@ -1,0 +1,608 @@
+2024/03/11 18:16:47 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/11 18:16:47 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/11 18:16:47 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 56928 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:37:26 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:12 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 10:41:13 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:55 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:55 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:55 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:55 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:55 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:55 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:55 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:55 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:55 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:55 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:55 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:55 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:55 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:55 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:55 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:55 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:55 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:55 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:47:56 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:48:40 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:48:40 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:48:40 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/12 14:48:40 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/12 14:48:40 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/12 14:48:40 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 92851 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 92851 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/13 18:25:18 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/13 18:25:18 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/13 18:25:18 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/13 18:25:18 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/13 18:25:18 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/13 18:25:18 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 68895 │ 
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 68895 │ 
+ └───────────────────────────────────────────────────┘ 
+
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/13 22:45:44 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/13 22:45:44 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/13 22:45:44 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/13 22:45:44 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/13 22:45:44 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/13 22:45:44 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 76079 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 76079 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/14 16:01:28 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/14 16:01:28 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/14 16:01:28 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/14 16:01:28 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/14 16:01:28 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/14 16:01:28 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 98343 │ 
+ └───────────────────────────────────────────────────┘ 
+
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 98343 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/15 00:09:28 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/15 00:09:28 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/15 00:09:28 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/15 00:09:28 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/15 00:09:28 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/15 00:09:28 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 35893 │ 
+ └───────────────────────────────────────────────────┘ 
+
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 35893 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/15 00:10:44 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/15 00:10:44 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/15 00:10:44 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/15 00:10:44 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/15 00:10:44 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/15 00:10:44 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 36164 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 36164 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/18 10:30:10 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/18 10:30:10 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/18 10:30:10 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/18 10:30:10 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/18 10:30:10 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/18 10:30:10 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 7205 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 7205 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/18 10:31:00 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/18 10:31:00 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/18 10:31:00 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/18 10:31:00 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/18 10:31:00 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/18 10:31:00 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 7506 │ 
+ └───────────────────────────────────────────────────┘ 
+
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 7506 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/19 10:29:10 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/19 10:29:10 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/19 10:29:10 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/19 10:29:10 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/19 10:29:10 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/19 10:29:10 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 54818 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 54818 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/19 14:28:22 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/19 14:28:22 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/19 14:28:22 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/19 14:28:22 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/19 14:28:22 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/19 14:28:22 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 71053 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 71053 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/19 14:51:40 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/19 14:51:40 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/19 14:51:40 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/19 14:51:40 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/19 14:51:40 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/19 14:51:40 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 73692 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 73692 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2024/03/20 16:13:38 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/20 16:13:38 CWD: /Users/hh/code/1sat-indexer/cmd/server
+2024/03/20 16:13:38 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/20 16:13:38 POSTGRES: postgresql://hh:hh111111@127.0.0.1:5432/1sats?sslmode=disable
+2024/03/20 16:13:38 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+2024/03/20 16:13:38 JUNGLEBUS https://testnet.junglebus.gorillapool.io
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 32303 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.1                   │ 
+ │               http://127.0.0.1:8082               │ 
+ │       (bound on host 0.0.0.0 and port 8082)       │ 
+ │                                                   │ 
+ │ Handlers ............. 8  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 32303 │ 
+ └───────────────────────────────────────────────────┘ 
+
