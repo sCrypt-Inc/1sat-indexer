@@ -702,7 +702,7 @@ func ValidateV1Transfer(txid []byte, tick string, mined bool) int {
 	return len(tokenOuts)
 }
 
-func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int) {
+func ValidateV2Transfer(txid []byte, id *lib.Outpoint) (outputs int) {
 	// log.Printf("Validating V2 Transfer %x %s\n", txid, id.String())
 
 	inRows, err := Db.Query(ctx, `
@@ -717,9 +717,9 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int)
 	}
 	defer inRows.Close()
 
-	var reason string
 	var tokensIn uint64
-	var tokenOuts []uint32
+	var validTokenOuts []uint32
+	var invalidTokenOuts []uint32
 	for inRows.Next() {
 		var inTxid []byte
 		var vout uint32
@@ -731,18 +731,13 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int)
 		}
 
 		switch inStatus {
-		case -1:
-			reason = "invalid input"
-		case 0:
-			fmt.Printf("inputs pending %s %x\n", id.String(), txid)
-			return
 		case 1:
 			tokensIn += amt
 		}
 	}
 	inRows.Close()
 
-	// fmt.Println("TokensIn:", tokensIn)
+	//fmt.Println("TokensIn:", tokensIn)
 	outRows, err := Db.Query(ctx, `
 		SELECT vout, status, amt
 		FROM bsv20_txos
@@ -755,6 +750,7 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int)
 	}
 	defer outRows.Close()
 
+	var reason string
 	for outRows.Next() {
 		var vout uint32
 		var amt uint64
@@ -763,51 +759,47 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int)
 		if err != nil {
 			log.Panicf("%x - %v\n", txid, err)
 		}
-		tokenOuts = append(tokenOuts, vout)
-		if reason != "" {
-			fmt.Println("Failed:", reason)
-			continue
-		}
+
 		if amt > tokensIn {
 			reason = fmt.Sprintf("insufficient balance %d < %d", tokensIn, amt)
-			if !mined {
-				fmt.Printf("%s %s - %x\n", id.String(), reason, txid)
-				return
-			}
+			invalidTokenOuts = append(invalidTokenOuts, vout)
 		} else {
 			tokensIn -= amt
+			validTokenOuts = append(validTokenOuts, vout)
 		}
 	}
 
-	// fmt.Println("TokensOut:", len(tokenOuts))
+	//fmt.Println("invalidTokenOuts:", len(invalidTokenOuts))
+	//fmt.Println("validTokenOuts:", len(validTokenOuts))
 	t, err := Db.Begin(ctx)
 	if err != nil {
 		log.Panic(err)
 	}
 	defer t.Rollback(ctx)
 
-	if reason != "" {
-		log.Printf("Transfer Invalid: %x %s %s\n", txid, id.String(), reason)
+	if len(invalidTokenOuts) > 0 {
+		//log.Printf("Transfer Invalid: %x %s %s\n", txid, id.String(), reason)
 		_, err := t.Exec(ctx, `
 				UPDATE bsv20_txos
 				SET status=-1, reason=$3
 				WHERE txid=$1 AND vout=ANY($2)`,
 			txid,
-			tokenOuts,
+			invalidTokenOuts,
 			reason,
 		)
 		if err != nil {
 			log.Panicf("%x %v\n", txid, err)
 		}
-	} else {
-		log.Printf("Transfer Valid: %x %s\n", txid, id.String())
+	}
+	if len(validTokenOuts) > 0 {
+		//log.Printf("Transfer Valid: %x %s\n", txid, id.String())
 		rows, err := t.Query(ctx, `
 				UPDATE bsv20_txos
 				SET status=1
 				WHERE txid=$1 AND vout=ANY ($2)
 				RETURNING vout, height, idx, amt, pkhash, listing, price, price_per_token, script`,
 			txid,
-			tokenOuts,
+			validTokenOuts,
 		)
 		if err != nil {
 			log.Panicf("%x %v\n", txid, err)
@@ -823,7 +815,7 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int)
 				log.Panicf("%x %v\n", txid, err)
 			}
 
-			log.Printf("Validating %s %x %d\n", id.String(), txid, bsv20.Vout)
+			//log.Printf("Validating %s %x %d\n", id.String(), txid, bsv20.Vout)
 			if bsv20.Listing {
 				bsv20.Outpoint = lib.NewOutpoint(txid, bsv20.Vout)
 				add, err := bscript.NewAddressFromPublicKeyHash(bsv20.PKHash, true)
@@ -845,7 +837,7 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int)
 	if err != nil {
 		log.Panic(err)
 	}
-	return len(tokenOuts)
+	return len(validTokenOuts)
 }
 
 func LoadTicker(tick string) (ticker *Bsv20) {

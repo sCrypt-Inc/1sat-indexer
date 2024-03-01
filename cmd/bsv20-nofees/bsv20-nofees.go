@@ -75,7 +75,7 @@ func main() {
 		FROM_BLOCK,
 		CONCURRENCY,
 		true,
-		true,
+		false,
 		VERBOSE,
 	)
 	if err != nil {
@@ -86,13 +86,15 @@ func main() {
 func handleTx(tx *lib.IndexContext) error {
 	ordinals.ParseInscriptions(tx)
 	ordinals.CalculateOrigins(tx)
+
+	tx.Save()
+
 	xfers := map[string]*ordinals.Bsv20{}
 	for _, txo := range tx.Txos {
 		if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
 			bsv20.Save(txo)
-			// if mempool tx, que for immediate validation
 			// if mined tx, skip and it will be validated by block handler
-			if tx.Height == nil && bsv20.Op == "transfer" {
+			if bsv20.Op == "transfer" {
 				if bsv20.Ticker != "" {
 					xfers[bsv20.Ticker] = bsv20
 				} else {
@@ -102,17 +104,14 @@ func handleTx(tx *lib.IndexContext) error {
 		}
 	}
 	for _, bsv20 := range xfers {
-		if bsv20.Ticker != "" {
-			ordinals.ValidateV1Transfer(tx.Txid, bsv20.Ticker, false)
-		} else {
-			ordinals.ValidateV2Transfer(tx.Txid, bsv20.Id, false)
-		}
+		ordinals.ValidateV2Transfer(tx.Txid, bsv20.Id)
 	}
 	return nil
 }
 
 func handleBlock(height uint32) error {
-	ordinals.ValidateBsv20Deploy(height - 6)
-	ordinals.ValidateBsv20Txos(height - 6)
+	// only need for bsv20 v2
+	// ordinals.ValidateBsv20Deploy(height - 6)
+	// ordinals.ValidateBsv20Txos(height - 6)
 	return nil
 }

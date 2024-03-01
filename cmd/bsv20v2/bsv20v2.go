@@ -151,7 +151,7 @@ func main() {
 					break
 				}
 				if funds, ok := idFunds[tokenId.String()]; ok {
-					outputs := ordinals.ValidateV2Transfer(txid, tokenId, false)
+					outputs := ordinals.ValidateV2Transfer(txid, tokenId)
 					funds.Used += int64(outputs) * ordinals.BSV20V2_OP_COST
 				}
 			default:
