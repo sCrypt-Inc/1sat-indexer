@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -79,18 +80,27 @@ func main() {
 	sub = subRdb.Subscribe(ctx, "broadcast")
 	ch1 := sub.Channel()
 
+	const MAX = 10
+	limiter := make(chan struct{}, MAX)
+	var wg sync.WaitGroup
 	go func() {
+
 		for msg := range ch1 {
 			switch msg.Channel {
 			case "broadcast":
+
 				rawtx, err := base64.StdEncoding.DecodeString(msg.Payload)
 				if err != nil {
 					log.Println("[BROADCAST]: Decode Payload error")
 					continue
 				}
+				limiter <- struct{}{} // will block if there is MAX structs in limiter
+				wg.Add(1)
 
 				go func(rawtx []byte) {
 					defer func() {
+						<-limiter // removes a struct from limiter, allowing another to proceed
+						wg.Done()
 						if r := recover(); r != nil {
 							fmt.Println("Recovered in broadcast")
 						}
@@ -130,6 +140,9 @@ func main() {
 	if err != nil {
 		log.Panicln(err)
 	}
+
+	close(limiter) // This tells the goroutines there's nothing else to do
+	wg.Wait()      // Wait for the threads to finish
 }
 
 func handleTx(tx *lib.IndexContext) error {
@@ -152,9 +165,13 @@ func handleTx(tx *lib.IndexContext) error {
 			}
 		}
 	}
-	for _, bsv20 := range xfers {
-		ordinals.ValidateV2Transfer(tx.Txid, bsv20.Id)
+
+	if tx.Height != nil && *tx.Height > 0 {
+		for _, bsv20 := range xfers {
+			ordinals.ValidateV2Transfer(tx.Txid, bsv20.Id)
+		}
 	}
+
 	return nil
 }
 
