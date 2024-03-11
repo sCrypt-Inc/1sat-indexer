@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"flag"
 	"fmt"
 	"log"
@@ -64,10 +65,58 @@ func init() {
 	}
 }
 
+var sub *redis.PubSub
+var ctx = context.Background()
+
 func main() {
-	err := indexer.Exec(
+
+	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		panic(err)
+	}
+
+	subRdb := redis.NewClient(opts)
+	sub = subRdb.Subscribe(ctx, "broadcast")
+	ch1 := sub.Channel()
+
+	go func() {
+		for msg := range ch1 {
+			switch msg.Channel {
+			case "broadcast":
+				rawtx, err := base64.StdEncoding.DecodeString(msg.Payload)
+				if err != nil {
+					log.Println("[BROADCAST]: Decode Payload error")
+					continue
+				}
+
+				go func(rawtx []byte) {
+					defer func() {
+						if r := recover(); r != nil {
+							fmt.Println("Recovered in broadcast")
+						}
+					}()
+					ctx, err := lib.ParseTxn(rawtx, "", 0, 0)
+					if err != nil {
+						log.Printf("[BROADCAST]: ParseTxn failed: %+v\n", err)
+						return
+					}
+
+					ctx.SaveSpends()
+
+					handleTx(ctx)
+
+					log.Printf("[BROADCAST]: succeed %x \n", ctx.Txid)
+				}(rawtx)
+
+			default:
+
+			}
+		}
+	}()
+
+	err = indexer.Exec(
 		true,
-		true,
+		false,
 		handleTx,
 		handleBlock,
 		INDEXER,
