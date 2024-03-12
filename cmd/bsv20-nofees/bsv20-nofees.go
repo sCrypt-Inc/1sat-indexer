@@ -41,8 +41,15 @@ func init() {
 	if POSTGRES == "" {
 		POSTGRES = os.Getenv("POSTGRES_FULL")
 	}
-	var err error
 	log.Println("POSTGRES:", POSTGRES)
+
+	if TOPIC == "" {
+		TOPIC = os.Getenv("FULL_SUBSCRIPTIONID")
+	}
+	log.Println("TOPIC:", TOPIC)
+
+	var err error
+
 	db, err = pgxpool.New(context.Background(), POSTGRES)
 	if err != nil {
 		log.Panic(err)
