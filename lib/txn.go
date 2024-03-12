@@ -197,12 +197,12 @@ func LoadSpends(txid []byte, tx *bt.Tx) []*Txo {
 				Vin:      uint32(vin),
 			}
 
-			tx, err := LoadTx(txin.PreviousTxIDStr())
+			spentTx, err := LoadTx(txin.PreviousTxIDStr())
 			if err != nil {
-				log.Panic(txin.PreviousTxIDStr(), err)
+				log.Panicf("LoadTx spent tx %s failed %v\n", txin.PreviousTxIDStr(), err)
 			}
 			var outSats uint64
-			for vout, txout := range tx.Outputs {
+			for vout, txout := range spentTx.Outputs {
 				if vout < int(spend.Outpoint.Vout()) {
 					outSats += txout.Satoshis
 					continue
