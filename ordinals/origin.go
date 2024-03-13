@@ -41,7 +41,12 @@ func calcOrigin(outpoint *lib.Outpoint, outAcc uint64, depth uint32) *lib.Outpoi
 	if err != nil && err != pgx.ErrNoRows {
 		return nil
 	} else if err == pgx.ErrNoRows || origin == nil {
-		spends := lib.LoadSpends(outpoint.Txid(), nil)
+		spends, err := lib.LoadSpends(outpoint.Txid(), nil)
+		if err != nil {
+			log.Printf("LoadSpends for tx: %x failed %v\n", outpoint.Txid(), err)
+			return nil
+		}
+
 		var inSats uint64
 		for _, spend := range spends {
 			if inSats < outAcc {

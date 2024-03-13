@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/binary"
 	"encoding/hex"
-	"fmt"
 	"log"
 	"sync"
 
@@ -145,13 +144,12 @@ func ParseSpends(ctx *IndexContext) {
 	}
 }
 
-func LoadSpends(txid []byte, tx *bt.Tx) []*Txo {
-	fmt.Println("Loading Spends", hex.EncodeToString(txid))
-	var err error
+func LoadSpends(txid []byte, tx *bt.Tx) (txos []*Txo, err error) {
+	// fmt.Println("Loading Spends", hex.EncodeToString(txid))
 	if tx == nil {
 		tx, err = LoadTx(hex.EncodeToString(txid))
 		if err != nil {
-			log.Panic(err)
+			return nil, err
 		}
 	}
 
@@ -165,7 +163,7 @@ func LoadSpends(txid []byte, tx *bt.Tx) []*Txo {
 		txid,
 	)
 	if err != nil {
-		log.Panic(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -177,7 +175,7 @@ func LoadSpends(txid []byte, tx *bt.Tx) []*Txo {
 		var outAcc sql.NullInt64
 		err = rows.Scan(&spend.Outpoint, &satoshis, &outAcc)
 		if err != nil {
-			log.Panic(err)
+			return nil, err
 		}
 		if satoshis.Valid && outAcc.Valid {
 			spend.Satoshis = uint64(satoshis.Int64)
@@ -199,7 +197,8 @@ func LoadSpends(txid []byte, tx *bt.Tx) []*Txo {
 
 			spentTx, err := LoadTx(txin.PreviousTxIDStr())
 			if err != nil {
-				log.Panicf("LoadTx spent tx %s failed %v\n", txin.PreviousTxIDStr(), err)
+				log.Printf("LoadTx spent tx %s failed", txin.PreviousTxIDStr())
+				return nil, err
 			}
 			var outSats uint64
 			for vout, txout := range spentTx.Outputs {
@@ -220,5 +219,5 @@ func LoadSpends(txid []byte, tx *bt.Tx) []*Txo {
 		inSats += spend.Satoshis
 		// fmt.Println("Inputs:", spends[vin].Outpoint)
 	}
-	return spends
+	return spends, nil
 }

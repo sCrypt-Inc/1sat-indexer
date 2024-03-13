@@ -90,7 +90,6 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 	}
 
 	if len(rawtx) == 0 {
-		log.Println("Requesting tx from WOC", txid)
 		rawtx, err = LoadTxFromWOC(txid, os.Getenv("NETWORK"))
 	}
 
