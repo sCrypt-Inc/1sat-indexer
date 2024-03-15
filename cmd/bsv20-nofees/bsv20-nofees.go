@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/base64"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"log"
@@ -153,6 +154,11 @@ func main() {
 }
 
 func handleTx(tx *lib.IndexContext) error {
+
+	if VERBOSE > 0 {
+		log.Printf("[handleTx]: %d - %s\n", *tx.Height, hex.EncodeToString(tx.Txid))
+	}
+
 	ordinals.ParseInscriptions(tx)
 	ordinals.CalculateOrigins(tx)
 
