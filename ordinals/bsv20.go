@@ -702,7 +702,7 @@ func ValidateV1Transfer(txid []byte, tick string, mined bool) int {
 	return len(tokenOuts)
 }
 
-func ValidateV2Transfer(txid []byte, id *lib.Outpoint) (outputs int) {
+func ValidateV2Transfer(txid []byte, id *lib.Outpoint, mined bool) (outputs int) {
 	// log.Printf("Validating V2 Transfer %x %s\n", txid, id.String())
 
 	inRows, err := Db.Query(ctx, `
@@ -763,6 +763,11 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint) (outputs int) {
 		if amt > tokensIn {
 			reason = fmt.Sprintf("insufficient balance %d < %d", tokensIn, amt)
 			invalidTokenOuts = append(invalidTokenOuts, vout)
+
+			if !mined {
+				log.Printf("%s %s - %x\n", id.String(), reason, txid)
+				return
+			}
 		} else {
 			tokensIn -= amt
 			validTokenOuts = append(validTokenOuts, vout)
@@ -795,7 +800,7 @@ func ValidateV2Transfer(txid []byte, id *lib.Outpoint) (outputs int) {
 		//log.Printf("Transfer Valid: %x %s\n", txid, id.String())
 		rows, err := t.Query(ctx, `
 				UPDATE bsv20_txos
-				SET status=1
+				SET status=1, reason=NULL
 				WHERE txid=$1 AND vout=ANY ($2)
 				RETURNING vout, height, idx, amt, pkhash, listing, price, price_per_token, script`,
 			txid,
@@ -1147,4 +1152,29 @@ func InitializeV2Funding(concurrency int) map[string]*V2TokenFunds {
 	}
 	wg.Wait()
 	return idFunds
+}
+
+func InitializeV2Ids() []*lib.Outpoint {
+
+	var ids []*lib.Outpoint
+
+	rows, err := Db.Query(context.Background(), `
+		SELECT id
+		FROM bsv20_v2`,
+	)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	fmt.Println("Processing v2 funding")
+	for rows.Next() {
+		outpoint := &lib.Outpoint{}
+		err = rows.Scan(&outpoint)
+		if err != nil {
+			panic(err)
+		}
+		ids = append(ids, outpoint)
+	}
+
+	return ids
 }

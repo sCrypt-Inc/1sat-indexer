@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/hex"
@@ -8,7 +9,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"sync"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -18,6 +21,7 @@ import (
 	"github.com/shruggr/1sat-indexer/ordinals"
 )
 
+// var settled = make(chan uint32, 1000)
 var POSTGRES string
 var db *pgxpool.Pool
 var rdb *redis.Client
@@ -25,18 +29,21 @@ var INDEXER string
 var TOPIC string
 var FROM_BLOCK uint
 var VERBOSE int
-var CONCURRENCY int = 64
+var CONCURRENCY int
+var ctx = context.Background()
+var REVALIDATE bool
 
 func init() {
 	wd, _ := os.Getwd()
 	log.Println("CWD:", wd)
 	godotenv.Load(fmt.Sprintf(`%s/../../.env`, wd))
 
-	flag.StringVar(&INDEXER, "id", "", "Indexer name")
+	flag.StringVar(&INDEXER, "id", "inscriptions", "Indexer name")
 	flag.StringVar(&TOPIC, "t", "", "Junglebus SubscriptionID")
 	flag.UintVar(&FROM_BLOCK, "s", uint(lib.TRIGGER), "Start from block")
 	flag.IntVar(&CONCURRENCY, "c", 64, "Concurrency Limit")
 	flag.IntVar(&VERBOSE, "v", 0, "Verbose")
+	flag.BoolVar(&REVALIDATE, "r", false, "revalidate")
 	flag.Parse()
 
 	if POSTGRES == "" {
@@ -74,25 +81,22 @@ func init() {
 	}
 }
 
+var limiter chan struct{}
 var sub *redis.PubSub
-var ctx = context.Background()
 
 func main() {
-
+	limiter = make(chan struct{}, CONCURRENCY)
 	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
 	if err != nil {
 		panic(err)
 	}
 
 	subRdb := redis.NewClient(opts)
-	sub = subRdb.Subscribe(ctx, "broadcast")
+	sub = subRdb.Subscribe(ctx, "broadcast", "v2xfer")
 	ch1 := sub.Channel()
 
-	const MAX = 10
-	limiter := make(chan struct{}, MAX)
 	var wg sync.WaitGroup
 	go func() {
-
 		for msg := range ch1 {
 			switch msg.Channel {
 			case "broadcast":
@@ -118,79 +122,133 @@ func main() {
 						log.Printf("[BROADCAST]: ParseTxn failed: %+v\n", err)
 						return
 					}
+					ordinals.IndexInscriptions(ctx)
+					ids := ordinals.IndexBsv20(ctx)
 
-					ctx.SaveSpends()
-
-					handleTx(ctx)
+					for _, id := range ids {
+						rdb.Publish(context.Background(), "v2xfer", fmt.Sprintf("%x:%s", ctx.Txid, id))
+					}
 
 					log.Printf("[BROADCAST]: succeed %x \n", ctx.Txid)
 				}(rawtx)
-
+			case "v2xfer":
+				parts := strings.Split(msg.Payload, ":")
+				txid, err := hex.DecodeString(parts[0])
+				if err != nil {
+					log.Println("Decode err", err)
+					break
+				}
+				tokenId, err := lib.NewOutpointFromString(parts[1])
+				if err != nil {
+					log.Println("NewOutpointFromString err", err)
+					break
+				}
+				ordinals.ValidateV2Transfer(txid, tokenId, false)
 			default:
-
 			}
 		}
 	}()
 
+	go func() {
+		for {
+			if !processV2() {
+				log.Println("No work to do")
+				time.Sleep(time.Second * 20)
+			}
+		}
+
+	}()
+
 	err = indexer.Exec(
 		true,
-		false,
-		handleTx,
-		handleBlock,
+		true,
+		func(ctx *lib.IndexContext) error {
+			ordinals.IndexInscriptions(ctx)
+			ordinals.IndexBsv20(ctx)
+			return nil
+		},
+		func(height uint32) error {
+			currentHeight = height
+			return nil
+		},
 		INDEXER,
 		TOPIC,
 		FROM_BLOCK,
 		CONCURRENCY,
-		true,
+		false,
 		false,
 		VERBOSE,
 	)
 	if err != nil {
 		log.Panicln(err)
 	}
-
-	close(limiter) // This tells the goroutines there's nothing else to do
-	wg.Wait()      // Wait for the threads to finish
 }
 
-func handleTx(tx *lib.IndexContext) error {
+func processV2() (didWork bool) {
+	wg := sync.WaitGroup{}
 
-	if VERBOSE > 0 {
-		log.Printf("[handleTx]: %d - %s\n", *tx.Height, hex.EncodeToString(tx.Txid))
-	}
+	ids := ordinals.InitializeV2Ids()
+	log.Println("Processing V2 ids len = ", len(ids))
+	for _, outpoint := range ids {
 
-	ordinals.ParseInscriptions(tx)
-	ordinals.CalculateOrigins(tx)
+		limiter <- struct{}{} // will block if there is MAX structs in limiter
+		wg.Add(1)
+		go func(outpoint *lib.Outpoint) {
+			defer func() {
+				<-limiter
+				wg.Done()
+			}()
 
-	tx.Save()
-
-	xfers := map[string]*ordinals.Bsv20{}
-	for _, txo := range tx.Txos {
-		if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
-			bsv20.Save(txo)
-			// if mined tx, skip and it will be validated by block handler
-			if bsv20.Op == "transfer" {
-				if bsv20.Ticker != "" {
-					xfers[bsv20.Ticker] = bsv20
-				} else {
-					xfers[bsv20.Id.String()] = bsv20
-				}
+			var sql string
+			if REVALIDATE {
+				sql = `
+				SELECT txid, vout, height, idx, id, amt
+				FROM bsv20_txos
+				WHERE op='transfer' AND id=$1 AND status in (0, -1)
+				ORDER BY height ASC, idx ASC, vout ASC
+				LIMIT $2`
+			} else {
+				sql = `
+				SELECT txid, vout, height, idx, id, amt
+				FROM bsv20_txos
+				WHERE op='transfer' AND id=$1 AND status = 0
+				ORDER BY height ASC, idx ASC, vout ASC
+				LIMIT $2`
 			}
-		}
+
+			rows, err := db.Query(ctx,
+				sql,
+				outpoint,
+				2000,
+			)
+			if err != nil {
+				log.Panic(err)
+			}
+			defer rows.Close()
+
+			var prevTxid []byte
+			for rows.Next() {
+				bsv20 := &ordinals.Bsv20{}
+				err = rows.Scan(&bsv20.Txid, &bsv20.Vout, &bsv20.Height, &bsv20.Idx, &bsv20.Id, &bsv20.Amt)
+				if err != nil {
+					log.Panicln(err)
+				}
+				//fmt.Printf("Validating Transfer: %s %x\n", outpoint.String(), bsv20.Txid)
+
+				if bytes.Equal(prevTxid, bsv20.Txid) {
+					// fmt.Printf("Skipping: %s %x\n", funds.Id.String(), bsv20.Txid)
+					continue
+				}
+				prevTxid = bsv20.Txid
+				ordinals.ValidateV2Transfer(bsv20.Txid, outpoint, bsv20.Height != nil)
+				//fmt.Printf("Validated Transfer: %s %x\n", outpoint.String(), bsv20.Txid)
+			}
+
+		}(outpoint)
+
 	}
 
-	if tx.Height != nil && *tx.Height > 0 {
-		for _, bsv20 := range xfers {
-			ordinals.ValidateV2Transfer(tx.Txid, bsv20.Id)
-		}
-	}
-
-	return nil
-}
-
-func handleBlock(height uint32) error {
-	// only need for bsv20 v2
-	// ordinals.ValidateBsv20Deploy(height - 6)
-	// ordinals.ValidateBsv20Txos(height - 6)
-	return nil
+	wg.Wait()
+	log.Println("Processing V2 end ")
+	return
 }

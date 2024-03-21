@@ -6,7 +6,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+	"time"
 
+	"github.com/GorillaPool/go-junglebus"
+	"github.com/GorillaPool/go-junglebus/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
@@ -18,10 +24,9 @@ import (
 var POSTGRES string
 var db *pgxpool.Pool
 var rdb *redis.Client
-var INDEXER string
+var INDEXER string = "bsv20"
 var TOPIC string
-var FROM_BLOCK uint
-var VERBOSE int
+var fromBlock uint
 var CONCURRENCY int = 64
 
 func init() {
@@ -29,11 +34,11 @@ func init() {
 	log.Println("CWD:", wd)
 	godotenv.Load(fmt.Sprintf(`%s/../../.env`, wd))
 
-	flag.StringVar(&INDEXER, "id", "", "Indexer name")
+	// flag.StringVar(&INDEXER, "id", "inscriptions", "Indexer name")
 	flag.StringVar(&TOPIC, "t", "", "Junglebus SubscriptionID")
-	flag.UintVar(&FROM_BLOCK, "s", uint(lib.TRIGGER), "Start from block")
+	flag.UintVar(&fromBlock, "s", uint(lib.TRIGGER), "Start from block")
 	flag.IntVar(&CONCURRENCY, "c", 64, "Concurrency Limit")
-	flag.IntVar(&VERBOSE, "v", 0, "Verbose")
+	// flag.IntVar(&VERBOSE, "v", 0, "Verbose")
 	flag.Parse()
 
 	if POSTGRES == "" {
@@ -45,6 +50,11 @@ func init() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	if TOPIC == "" {
+		TOPIC = os.Getenv("FULL_SUBSCRIPTIONID")
+	}
+	log.Println("TOPIC:", TOPIC)
 
 	opts, err := redis.ParseURL(os.Getenv("REDIS_URL"))
 	if err != nil {
@@ -58,66 +68,160 @@ func init() {
 		log.Panic(err)
 	}
 
+	err = ordinals.Initialize(indexer.Db, indexer.Rdb)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func main() {
+	JUNGLEBUS := os.Getenv("JUNGLEBUS")
+	if JUNGLEBUS == "" {
+		JUNGLEBUS = "https://junglebus.gorillapool.io"
+	}
+	fmt.Println("JUNGLEBUS", JUNGLEBUS, TOPIC)
 
-	err := indexer.Exec(
-		true,
-		false,
-		func(ctx *lib.IndexContext) error {
-			ordinals.ParseInscriptions(ctx)
-			ids := map[string]uint64{}
-			for _, txo := range ctx.Txos {
-				if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
-					if bsv20.Id == nil {
-						continue
-					}
-					id := bsv20.Id.String()
-					if txouts, ok := ids[id]; !ok {
-						ids[id] = 1
-					} else {
-						ids[id] = txouts + 1
-					}
-				}
-			}
-			for idstr, txouts := range ids {
-				id, err := lib.NewOutpointFromString(idstr)
-				if err != nil {
-					log.Printf("Err: %s %x %d\n", idstr, ctx.Txid, txouts)
-					return err
-				} else {
-					_, err = db.Exec(context.Background(), `
-						INSERT INTO bsv20v2_txns(txid, id, height, idx, txouts)
-						VALUES($1, $2, $3, $4, $5)
-						ON CONFLICT(txid, id) DO NOTHING`,
-						ctx.Txid,
-						id,
-						ctx.Height,
-						ctx.Idx,
-						txouts,
-					)
-				}
-				if err != nil {
-					log.Printf("Err: %s %x %d\n", idstr, ctx.Txid, txouts)
-					return err
-				}
-			}
-			return nil
-		},
-		func(height uint32) error {
-
-			return nil
-		},
-		INDEXER,
-		TOPIC,
-		FROM_BLOCK,
-		CONCURRENCY,
-		false,
-		false,
-		VERBOSE,
+	junglebusClient, err := junglebus.New(
+		junglebus.WithHTTP(JUNGLEBUS),
 	)
 	if err != nil {
-		log.Panicln(err)
+		log.Panicln(err.Error())
+	}
+
+	row := db.QueryRow(context.Background(), `
+		SELECT height
+		FROM progress
+		WHERE indexer=$1`,
+		"bsv20",
+	)
+	var lastProcessed uint32
+	err = row.Scan(&lastProcessed)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+	if lastProcessed < uint32(fromBlock) {
+		lastProcessed = uint32(fromBlock)
+	}
+
+	var txCount int
+	var height uint32
+	var idx uint64
+	ticker := time.NewTicker(10 * time.Second)
+	go func() {
+		for range ticker.C {
+			if txCount > 0 {
+				log.Printf("Blk %d I %d - %d txs %d/s\n", height, idx, txCount, txCount/10)
+			}
+			txCount = 0
+		}
+	}()
+
+	var sub *junglebus.Subscription
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigs
+		fmt.Printf("Caught signal")
+		fmt.Println("Unsubscribing and exiting...")
+		if sub != nil {
+			sub.Unsubscribe()
+		}
+		os.Exit(0)
+	}()
+
+	timer := time.NewTicker(30 * time.Second)
+	for {
+		<-timer.C
+		if sub != nil {
+			continue
+		}
+
+		log.Println("Subscribing to Junglebus from block", lastProcessed)
+		var wg sync.WaitGroup
+		limiter := make(chan struct{}, CONCURRENCY)
+		sub, err = junglebusClient.SubscribeWithQueue(
+			context.Background(),
+			TOPIC,
+			uint64(lastProcessed),
+			0,
+			junglebus.EventHandler{
+				OnTransaction: func(txn *models.TransactionResponse) {
+					limiter <- struct{}{}
+					wg.Add(1)
+					go func(txn *models.TransactionResponse) {
+						defer func() {
+							<-limiter
+							wg.Done()
+						}()
+						txCtx, err := lib.ParseTxn(txn.Transaction, txn.BlockHash, txn.BlockHeight, txn.BlockIndex)
+						if err != nil {
+							panic(err)
+						}
+						ordinals.ParseInscriptions(txCtx)
+						ids := map[string]uint64{}
+						for _, txo := range txCtx.Txos {
+							if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
+								if bsv20.Id == nil {
+									continue
+								}
+
+								id := bsv20.Id.String()
+
+								if txouts, ok := ids[id]; !ok {
+									ids[id] = 1
+								} else {
+									ids[id] = txouts + 1
+								}
+							}
+						}
+						for idstr, txouts := range ids {
+							id, err := lib.NewOutpointFromString(idstr)
+							if err != nil {
+								log.Panicln(err)
+							}
+
+							_, err = db.Exec(context.Background(), `
+									INSERT INTO bsv20v2_txns(txid, id, height, idx, txouts)
+									VALUES($1, $2, $3, $4, $5)
+									ON CONFLICT(txid, id) DO NOTHING`,
+								txCtx.Txid,
+								id,
+								txCtx.Height,
+								txCtx.Idx,
+								txouts,
+							)
+
+							if err != nil {
+								log.Panicln(err)
+							}
+						}
+					}(txn)
+
+				},
+				OnStatus: func(status *models.ControlResponse) {
+					log.Printf("[STATUS]: %d %v\n", status.StatusCode, status.Message)
+					if status.StatusCode == 200 {
+						wg.Wait()
+						lastProcessed = status.Block
+						db.Exec(context.Background(),
+							`UPDATE progress
+								SET height=$1
+								WHERE indexer='bsv20' and height<$1`,
+							lastProcessed,
+						)
+					}
+				},
+				OnError: func(err error) {
+					log.Printf("[ERROR]: %v\n", err)
+					panic(err)
+				},
+			},
+			&junglebus.SubscribeOptions{
+				QueueSize: 100000,
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
 	}
 }

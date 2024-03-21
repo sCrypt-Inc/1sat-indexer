@@ -139,7 +139,7 @@ func main() {
 					break
 				}
 				if funds, ok := idFunds[tokenId.String()]; ok {
-					outputs := ordinals.ValidateV2Transfer(txid, tokenId)
+					outputs := ordinals.ValidateV2Transfer(txid, tokenId, false)
 					funds.Used += int64(outputs) * ordinals.BSV20V2_OP_COST
 				}
 			default:
@@ -288,7 +288,7 @@ func processV2() (didWork bool) {
 				}
 				didWork = true
 				prevTxid = bsv20.Txid
-				outputs := ordinals.ValidateV2Transfer(bsv20.Txid, funds.Id)
+				outputs := ordinals.ValidateV2Transfer(bsv20.Txid, funds.Id, true)
 				funds.Used += int64(outputs) * ordinals.BSV20V2_OP_COST
 				fmt.Printf("Validated Transfer: %s %x\n", funds.Id.String(), bsv20.Txid)
 			}

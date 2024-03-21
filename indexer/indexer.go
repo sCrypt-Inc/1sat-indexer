@@ -74,7 +74,7 @@ func Exec(
 	}
 
 	if indexer != "" {
-		var progress uint
+		var progress int
 		row := Db.QueryRow(context.Background(), `SELECT height
 			FROM progress
 			WHERE indexer=$1`,
@@ -89,8 +89,8 @@ func Exec(
 			)
 		}
 		progress -= 6
-		if progress > fromBlock {
-			fromBlock = progress
+		if progress > int(fromBlock) {
+			fromBlock = uint(progress)
 		}
 	}
 
