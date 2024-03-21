@@ -172,7 +172,7 @@ func main() {
 		}
 	}()
 
-	err := indexer.Exec(
+	err = indexer.Exec(
 		true,
 		true,
 		func(ctx *lib.IndexContext) error {
