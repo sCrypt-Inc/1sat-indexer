@@ -168,7 +168,6 @@ func main() {
 			return nil
 		},
 		func(height uint32) error {
-			currentHeight = height
 			return nil
 		},
 		INDEXER,
