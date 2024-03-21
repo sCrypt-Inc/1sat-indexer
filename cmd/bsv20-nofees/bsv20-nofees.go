@@ -190,11 +190,10 @@ func processV2() (didWork bool) {
 	log.Println("Processing V2 ids len = ", len(ids))
 	for _, outpoint := range ids {
 
-		limiter <- struct{}{} // will block if there is MAX structs in limiter
 		wg.Add(1)
 		go func(outpoint *lib.Outpoint) {
 			defer func() {
-				<-limiter
+				limiter <- struct{}{}
 				wg.Done()
 			}()
 
@@ -245,6 +244,7 @@ func processV2() (didWork bool) {
 
 		}(outpoint)
 
+		<-limiter // will block if there is MAX structs in limiter
 	}
 
 	wg.Wait()
