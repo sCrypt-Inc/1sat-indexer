@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -28,7 +29,7 @@ var INDEXER string
 var TOPIC string
 var FROM_BLOCK uint
 var VERBOSE int
-var CONCURRENCY int = 8
+var CONCURRENCY int
 var ctx = context.Background()
 
 func init() {
@@ -36,8 +37,12 @@ func init() {
 	log.Println("CWD:", wd)
 	godotenv.Load(fmt.Sprintf(`%s/../../.env`, wd))
 
-	// flag.IntVar(&CONCURRENCY, "c", 32, "Concurrency Limit")
-	// flag.Parse()
+	flag.StringVar(&INDEXER, "id", "inscriptions", "Indexer name")
+	flag.StringVar(&TOPIC, "t", "", "Junglebus SubscriptionID")
+	flag.UintVar(&FROM_BLOCK, "s", uint(lib.TRIGGER), "Start from block")
+	flag.IntVar(&CONCURRENCY, "c", 64, "Concurrency Limit")
+	flag.IntVar(&VERBOSE, "v", 0, "Verbose")
+	flag.Parse()
 
 	if POSTGRES == "" {
 		POSTGRES = os.Getenv("POSTGRES_FULL")
@@ -69,9 +74,11 @@ func init() {
 
 var pkhashFunds = map[string]*ordinals.V2TokenFunds{}
 var idFunds = map[string]*ordinals.V2TokenFunds{}
-
+var m sync.Mutex
 var limiter chan struct{}
 var sub *redis.PubSub
+
+var currentHeight uint32
 
 func main() {
 	limiter = make(chan struct{}, CONCURRENCY)
@@ -95,12 +102,15 @@ func main() {
 		}
 		pkhash := hex.EncodeToString(funds.PKHash)
 		pkhashFunds[pkhash] = &funds
+		m.Lock()
 		idFunds[id] = &funds
+		m.Unlock()
 		sub.Subscribe(ctx, pkhash)
 	}
 
 	go func() {
 		for {
+			m.Lock()
 			idFunds = ordinals.InitializeV2Funding(CONCURRENCY)
 			for _, funds := range idFunds {
 				pkhash := hex.EncodeToString(funds.PKHash)
@@ -109,6 +119,7 @@ func main() {
 					sub.Subscribe(ctx, pkhash)
 				}
 			}
+			m.Unlock()
 			time.Sleep(time.Hour)
 		}
 	}()
@@ -122,7 +133,9 @@ func main() {
 				if err != nil {
 					break
 				}
+				m.Lock()
 				idFunds[funds.Id.String()] = funds
+				m.Unlock()
 				pkhash := hex.EncodeToString(funds.PKHash)
 				pkhashFunds[pkhash] = funds
 			case "v2xfer":
@@ -150,17 +163,52 @@ func main() {
 		}
 	}()
 
-	for {
-		if !processV2() {
-			log.Println("No work to do")
-			time.Sleep(time.Minute)
+	go func() {
+		for {
+			if !processV2() {
+				log.Println("No work to do")
+				time.Sleep(time.Minute)
+			}
 		}
+	}()
+
+	err := indexer.Exec(
+		true,
+		true,
+		func(ctx *lib.IndexContext) error {
+			ordinals.IndexInscriptions(ctx)
+			ordinals.IndexBsv20(ctx)
+			return nil
+		},
+		func(height uint32) error {
+			currentHeight = height
+			return nil
+		},
+		INDEXER,
+		TOPIC,
+		FROM_BLOCK,
+		CONCURRENCY,
+		false,
+		false,
+		1)
+	if err != nil {
+		log.Panicln(err)
 	}
 }
 
 func processV2() (didWork bool) {
 	var wg sync.WaitGroup
+	m.Lock()
+	var fundsList = make([]*ordinals.V2TokenFunds, 0, len(idFunds))
 	for _, funds := range idFunds {
+		if funds.Balance() < ordinals.BSV20V2_OP_COST {
+			continue
+		}
+		fundsList = append(fundsList, funds)
+	}
+	m.Unlock()
+
+	for _, funds := range fundsList {
 		if funds.Balance() < ordinals.BSV20V2_OP_COST {
 			continue
 		}
@@ -173,93 +221,11 @@ func processV2() (didWork bool) {
 				<-limiter
 				wg.Done()
 			}()
-			row := db.QueryRow(ctx, `
-				SELECT COUNT(1)
-				FROM bsv20_txos
-				WHERE id=$1 AND status=0 AND height>0 AND height IS NOT NULL`,
-				funds.Id,
-			)
-			var pending int
-			err := row.Scan(&pending)
-			if err != nil {
-				log.Panic(err)
-			}
-
-			limit := (funds.Balance() - int64(pending)*ordinals.BSV20V2_OP_COST) / ordinals.BSV20V2_OP_COST
-			if limit > 0 {
-				rows, err := db.Query(ctx, `
-					SELECT txid, height, idx, txouts
-					FROM bsv20v2_txns
-					WHERE processed=false AND id=$1
-					ORDER BY height ASC, idx ASC
-					LIMIT $2`,
-					funds.Id,
-					limit,
-				)
-				if err != nil {
-					log.Panic(err)
-				}
-				defer rows.Close()
-				balance := funds.Balance()
-
-				for rows.Next() {
-					var txid []byte
-					var height uint32
-					var idx uint64
-					var txouts int64
-					err = rows.Scan(&txid, &height, &idx, &txouts)
-					if err != nil {
-						log.Panic(err)
-					}
-					if balance < txouts*ordinals.BSV20V2_OP_COST {
-						// log.Printf("Insufficient Balance %s %x\n", funds.Id.String(), txid)
-						break
-					}
-					// log.Printf("Loading %s %x\n", funds.Id.String(), txid)
-					rawtx, err := lib.LoadRawtx(hex.EncodeToString(txid))
-					if err != nil {
-						log.Panic(err)
-					}
-
-					// log.Printf("Parsing %s %x\n", funds.Id.String(), txid)
-					txn := ordinals.IndexTxn(rawtx, "", height, idx)
-					ordinals.ParseBsv20(txn)
-					// log.Printf("Parsed %s %x\n", funds.Id.String(), txid)
-					for _, txo := range txn.Txos {
-						if bsv20, ok := txo.Data["bsv20"].(*ordinals.Bsv20); ok {
-							if !bytes.Equal(*funds.Id, *bsv20.Id) {
-								continue
-							}
-							if bsv20.Op == "transfer" {
-								balance -= ordinals.BSV20V2_OP_COST
-							}
-							// log.Printf("Saving %s %x %d\n", funds.Id.String(), txid, txo.Outpoint.Vout())
-							bsv20.Save(txo)
-						}
-					}
-					// log.Printf("Updating %s %x\n", funds.Id.String(), txid)
-					_, err = db.Exec(ctx, `
-					UPDATE bsv20v2_txns
-					SET processed=true
-					WHERE txid=$1 AND id=$2`,
-						txn.Txid,
-						funds.Id,
-					)
-					if err != nil {
-						log.Panic(err)
-					}
-					didWork = true
-					if balance < ordinals.BSV20V2_OP_COST {
-						break
-					}
-				}
-				rows.Close()
-			}
 
 			rows, err := db.Query(ctx, `
 				SELECT txid, vout, height, idx, id, amt
 				FROM bsv20_txos
-				WHERE op='transfer' AND id=$1 AND status=0 AND height > 0 AND height IS NOT NULL
+				WHERE op='transfer' AND id=$1 AND status=0
 				ORDER BY height ASC, idx ASC, vout ASC
 				LIMIT $2`,
 				funds.Id,
@@ -271,9 +237,7 @@ func processV2() (didWork bool) {
 			defer rows.Close()
 
 			var prevTxid []byte
-			hasRows := false
 			for rows.Next() {
-				hasRows = true
 				bsv20 := &ordinals.Bsv20{}
 				err = rows.Scan(&bsv20.Txid, &bsv20.Vout, &bsv20.Height, &bsv20.Idx, &bsv20.Id, &bsv20.Amt)
 				if err != nil {
@@ -285,14 +249,16 @@ func processV2() (didWork bool) {
 					// fmt.Printf("Skipping: %s %x\n", funds.Id.String(), bsv20.Txid)
 					continue
 				}
-				didWork = true
 				prevTxid = bsv20.Txid
-				outputs := ordinals.ValidateV2Transfer(bsv20.Txid, funds.Id, true)
+				outputs := ordinals.ValidateV2Transfer(bsv20.Txid, funds.Id, bsv20.Height != nil && *bsv20.Height <= currentHeight)
+				if outputs > 0 {
+					didWork = true
+				}
 				funds.Used += int64(outputs) * ordinals.BSV20V2_OP_COST
 				fmt.Printf("Validated Transfer: %s %x\n", funds.Id.String(), bsv20.Txid)
 			}
 
-			if hasRows {
+			if didWork {
 				funds.UpdateFunding()
 			}
 		}(funds)

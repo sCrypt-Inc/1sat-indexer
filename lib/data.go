@@ -2,6 +2,7 @@ package lib
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -10,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/GorillaPool/go-junglebus"
+	"github.com/GorillaPool/go-junglebus/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/libsv/go-bt/v2"
 	"github.com/ordishs/go-bitcoin"
@@ -53,14 +55,21 @@ func LoadTx(txid string) (tx *bt.Tx, err error) {
 	if err != nil {
 		return
 	}
+	if len(rawtx) == 0 {
+		err = fmt.Errorf("missing-txn %s", txid)
+		return
+	}
 	return bt.NewTxFromBytes(rawtx)
 }
 
 func LoadRawtx(txid string) (rawtx []byte, err error) {
-	rawtx, _ = Rdb.Get(context.Background(), txid).Bytes()
+	rawtx, _ = Rdb.HGet(context.Background(), "tx", txid).Bytes()
 
-	if len(rawtx) > 0 {
+	if len(rawtx) > 100 {
 		return rawtx, nil
+	} else {
+		rawtx = []byte{}
+
 	}
 
 	if len(rawtx) == 0 && JB != nil {
@@ -83,7 +92,7 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 		return
 	}
 
-	Rdb.Set(context.Background(), txid, rawtx, 0).Err()
+	Rdb.HSet(context.Background(), "tx", txid, rawtx, 0).Err()
 	return
 }
 
@@ -118,4 +127,26 @@ func GetSpend(outpoint *Outpoint) (spend []byte, err error) {
 		return
 	}
 	return io.ReadAll(resp.Body)
+}
+
+func GetChaintip() (*models.BlockHeader, error) {
+	url := fmt.Sprintf("%s/v1/block_header/tip", os.Getenv("JUNGLEBUS"))
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Println("JB Tip Request", err)
+		return nil, err
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("JB Tip Read", err)
+		return nil, err
+	}
+	chaintip := &models.BlockHeader{}
+	err = json.Unmarshal(body, &chaintip)
+	if err != nil {
+		log.Println("JB Tip Unmarshal", err)
+		return nil, err
+	}
+	fmt.Println("Chaintip", chaintip.Height)
+	return chaintip, nil
 }
