@@ -60,18 +60,22 @@ func LoadTx(txid string) (tx *bt.Tx, err error) {
 		err = fmt.Errorf("missing-txn %s", txid)
 		return
 	}
-	return bt.NewTxFromBytes(rawtx)
+	tx, err = bt.NewTxFromBytes(rawtx)
+
+	if err != nil {
+		log.Println("NewTxFromBytes failed", txid)
+	}
+	return tx, err
 }
 
 func LoadRawtx(txid string) (rawtx []byte, err error) {
 	rawtx, _ = Rdb.HGet(context.Background(), "tx", txid).Bytes()
 
 	if len(rawtx) > 100 {
-		// log.Println("Requesting tx from redis", txid)
 		return rawtx, nil
 	} else {
+		log.Println("Requesting tx from redis failed", txid)
 		rawtx = []byte{}
-
 	}
 
 	if len(rawtx) == 0 && JB != nil {
@@ -79,18 +83,23 @@ func LoadRawtx(txid string) (rawtx []byte, err error) {
 
 		if resp, err := http.Get(url); err == nil && resp.StatusCode < 300 {
 			rawtx, _ = io.ReadAll(resp.Body)
+		} else {
+			log.Println("Requesting tx from JUNGLEBUS failed", txid)
 		}
 	}
 
-	if len(rawtx) == 0 && bit != nil {
-		// log.Println("Requesting tx from node", txid)
-		if r, err := bit.GetRawTransactionRest(txid); err == nil {
-			rawtx, _ = io.ReadAll(r)
-		}
-	}
+	// if len(rawtx) == 0 && bit != nil {
+	// 	// log.Println("Requesting tx from node", txid)
+	// 	if r, err := bit.GetRawTransactionRest(txid); err == nil {
+	// 		rawtx, _ = io.ReadAll(r)
+	// 	}
+	// }
 
 	if len(rawtx) == 0 {
 		rawtx, err = LoadTxFromWOC(txid, os.Getenv("NETWORK"))
+		if err != nil {
+			log.Println("Requesting tx from WOC failed", txid)
+		}
 	}
 
 	if len(rawtx) == 0 {
@@ -172,7 +181,7 @@ func LoadTxFromWOC(txid string, network string) (rawtx []byte, err error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		err = fmt.Errorf("missing-txn %s", txid)
+		err = fmt.Errorf("LoadTxFromWOC failed: %s", txid)
 		return
 	}
 

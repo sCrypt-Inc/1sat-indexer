@@ -143,7 +143,9 @@ func main() {
 					log.Println("NewOutpointFromString err", err)
 					break
 				}
-				ordinals.ValidateV2Transfer(txid, tokenId, false)
+
+				nOutputs := ordinals.ValidateV2Transfer(txid, tokenId, false)
+				log.Println("[V2XFER]: nOutputs=", msg.Payload, nOutputs)
 			default:
 			}
 		}
