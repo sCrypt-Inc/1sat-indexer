@@ -188,13 +188,14 @@ func main() {
 func processV2() (didWork bool) {
 	wg := sync.WaitGroup{}
 
+	limiterThread := make(chan struct{}, CONCURRENCY)
 	ids := ordinals.InitializeV2Ids()
 	for _, outpoint := range ids {
-		limiter <- struct{}{}
+		limiterThread <- struct{}{}
 		wg.Add(1)
 		go func(outpoint *lib.Outpoint) {
 			defer func() {
-				<-limiter
+				<-limiterThread
 				wg.Done()
 			}()
 
@@ -247,5 +248,7 @@ func processV2() (didWork bool) {
 	}
 
 	wg.Wait()
+
+	close(limiterThread)
 	return
 }
