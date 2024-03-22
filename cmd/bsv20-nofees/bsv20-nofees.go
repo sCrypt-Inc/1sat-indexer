@@ -126,7 +126,10 @@ func main() {
 					ids := ordinals.IndexBsv20(ctx)
 
 					for _, id := range ids {
-						rdb.Publish(context.Background(), "v2xfer", fmt.Sprintf("%x:%s", ctx.Txid, id))
+						result := rdb.Publish(context.Background(), "v2xfer", fmt.Sprintf("%x:%s", ctx.Txid, id))
+						if result.Err() != nil {
+							log.Printf("[PUBLISH]: %x:%s failed: %+v\n", ctx.Txid, id, err)
+						}
 					}
 
 					log.Printf("[BROADCAST]: succeed %x \n", ctx.Txid)
@@ -163,7 +166,7 @@ func main() {
 
 	err = indexer.Exec(
 		true,
-		true,
+		false,
 		func(ctx *lib.IndexContext) error {
 			ordinals.IndexInscriptions(ctx)
 			ordinals.IndexBsv20(ctx)
