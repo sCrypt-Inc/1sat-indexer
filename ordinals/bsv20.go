@@ -113,10 +113,12 @@ func ParseBsv20(ctx *lib.IndexContext) (tickers []string) {
 	return
 }
 
-func IndexBsv20(ctx *lib.IndexContext) (tickers []string) {
-	tickers = ParseBsv20(ctx)
+func IndexBsv20(ctx *lib.IndexContext) (ids []string) {
+	//tickers = ParseBsv20(ctx)
+	tokens := map[string]struct{}{}
 	for _, txo := range ctx.Txos {
 		if bsv20, ok := txo.Data["bsv20"].(*Bsv20); ok {
+			tokens[(*bsv20).Id.String()] = struct{}{}
 			bsv20.Save(txo)
 		}
 	}
@@ -134,7 +136,11 @@ func IndexBsv20(ctx *lib.IndexContext) (tickers []string) {
 			log.Panic(err)
 		}
 	}
-	return tickers
+
+	for tick, _ := range tokens {
+		ids = append(ids, tick)
+	}
+	return ids
 }
 
 func ParseBsv20Inscription(ord *lib.File, txo *lib.Txo) (bsv20 *Bsv20, err error) {

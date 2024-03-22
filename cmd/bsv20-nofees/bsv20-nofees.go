@@ -68,7 +68,7 @@ func init() {
 		panic(err)
 	}
 
-	rdb := redis.NewClient(opts)
+	rdb = redis.NewClient(opts)
 
 	err = indexer.Initialize(db, rdb)
 	if err != nil {
@@ -114,7 +114,7 @@ func main() {
 						<-limiter // removes a struct from limiter, allowing another to proceed
 						wg.Done()
 						if r := recover(); r != nil {
-							fmt.Println("Recovered in broadcast")
+							log.Println("Recovered in broadcast")
 						}
 					}()
 					ctx, err := lib.ParseTxn(rawtx, "", 0, 0)
@@ -124,15 +124,12 @@ func main() {
 					}
 					ordinals.IndexInscriptions(ctx)
 					ids := ordinals.IndexBsv20(ctx)
-
 					for _, id := range ids {
-						result := rdb.Publish(context.Background(), "v2xfer", fmt.Sprintf("%x:%s", ctx.Txid, id))
-						if result.Err() != nil {
-							log.Printf("[PUBLISH]: %x:%s failed: %+v\n", ctx.Txid, id, err)
-						}
+						rdb.Publish(context.Background(), "v2xfer", fmt.Sprintf("%x:%s", ctx.Txid, id))
 					}
-
-					log.Printf("[BROADCAST]: succeed %x \n", ctx.Txid)
+					if VERBOSE > 0 {
+						log.Printf("[BROADCAST]: succeed %x \n", ctx.Txid)
+					}
 				}(rawtx)
 			case "v2xfer":
 				parts := strings.Split(msg.Payload, ":")
@@ -147,8 +144,8 @@ func main() {
 					break
 				}
 
-				nOutputs := ordinals.ValidateV2Transfer(txid, tokenId, false)
-				log.Println("[V2XFER]: nOutputs=", msg.Payload, nOutputs)
+				ordinals.ValidateV2Transfer(txid, tokenId, false)
+
 			default:
 			}
 		}
@@ -192,13 +189,12 @@ func processV2() (didWork bool) {
 	wg := sync.WaitGroup{}
 
 	ids := ordinals.InitializeV2Ids()
-	log.Println("Processing V2 ids len = ", len(ids))
 	for _, outpoint := range ids {
-
+		limiter <- struct{}{}
 		wg.Add(1)
 		go func(outpoint *lib.Outpoint) {
 			defer func() {
-				limiter <- struct{}{}
+				<-limiter
 				wg.Done()
 			}()
 
@@ -248,11 +244,8 @@ func processV2() (didWork bool) {
 			}
 
 		}(outpoint)
-
-		<-limiter // will block if there is MAX structs in limiter
 	}
 
 	wg.Wait()
-	log.Println("Processing V2 end ")
 	return
 }
