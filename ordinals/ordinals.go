@@ -66,6 +66,9 @@ func CalculateOrigins(ctx *lib.IndexContext) {
 			continue
 		}
 		txo.Origin = LoadOrigin(txo.Outpoint, txo.OutAcc)
+		if txo.Origin == nil {
+			log.Println("LoadOrigin FAIL, Outpoint:", txo.Outpoint.String())
+		}
 	}
 }
 
