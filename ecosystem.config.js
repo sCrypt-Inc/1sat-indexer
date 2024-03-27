@@ -4,7 +4,7 @@ module.exports = {
     name   : "bsv20",
     script : "./bsv20-nofees",
     cwd : "./cmd/bsv20-nofees",
-    args : ["-s", "1600000", "-c", "5"],
+    args : ["-s", "1600000", "-c", "1"],
     merge_logs: true,
     error_file: "output.log",
     log_file: "output.log",
